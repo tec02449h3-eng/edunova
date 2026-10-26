@@ -1,26 +1,275 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DARK ESCAPE</title>
-<link rel="stylesheet" href="style.css">
-</head><body>
-<canvas id="c"></canvas>
-<div id="hud" class="hidden">
-  <div class="bars"><div>Health<i><b id="hp"></b></i></div><div>Battery<i><b id="bat"></b></i></div></div>
-  <div id="stats">Keys: <span id="keys">0</span> &nbsp; Relics: <span id="rel">0</span>/3</div>
-  <div id="obj"></div><div id="prompt"></div><div id="flash"></div>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Edunova منصة تعليمية عربية لتعلم البرمجة والشبكات والتصميم.">
+<title>Edunova | منصتك التعليمية</title>
+<style>
+:root{--p:#5948e8;--dark:#19213a;--muted:#69758b;--bg:#f6f7fc;--border:#e7e9f2}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:85px}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--dark);line-height:1.8}
+.container{width:min(1100px,92%);margin:auto}
+header{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
+nav{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;padding:14px 0}
+.logo{font-size:28px;font-weight:bold;color:var(--p);text-decoration:none}
+.logo span{color:var(--dark)}
+.links{display:flex;gap:18px;flex-wrap:wrap}
+.links a{text-decoration:none;color:#505a70;font-size:14px}
+.links a:hover{color:var(--p)}
+.btn{display:inline-block;border:0;border-radius:10px;padding:10px 17px;font:inherit;font-size:14px;font-weight:bold;cursor:pointer;text-decoration:none}
+.primary{background:var(--p);color:white}
+.secondary{background:#eeecff;color:var(--p)}
+.hero{padding:65px 0;background:linear-gradient(125deg,#eeebff,#f8fbff 65%,#e4f8f0)}
+.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:35px;align-items:center}
+.eyebrow{color:var(--p);font-weight:bold}
+h1{font-size:clamp(32px,5vw,49px);line-height:1.4;margin:12px 0}
+p{color:var(--muted)}
+.hero-card,.course,.dashboard{background:white;border:1px solid var(--border);border-radius:18px}
+.hero-card{text-align:center;padding:28px}
+.hero-icon{font-size:65px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px}
+.stat{background:#f4f3ff;border-radius:10px;padding:10px 3px}
+.stat strong{display:block;color:var(--p);font-size:19px}
+.stat small{color:var(--muted);font-size:11px}
+section{padding:48px 0}
+.heading{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:22px}
+h2{font-size:27px;margin:0}
+.heading p{margin:4px 0}
+.search{width:min(100%,320px);padding:12px;border:1px solid #dfe3ed;border-radius:10px;font:inherit}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.filter{padding:8px 15px;border:1px solid #e0e3ed;border-radius:25px;background:white;cursor:pointer;font:inherit}
+.filter.active{background:var(--p);color:white}
+.courses{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.course{overflow:hidden}
+.cover{height:140px;display:grid;place-items:center;font-size:54px}
+.purple{background:#eeebff}.blue{background:#e5f3ff}.green{background:#e2f8ec}.orange{background:#fff0df}.pink{background:#ffebf3}.gray{background:#e9edf7}
+.course-body{padding:18px}
+.tag{font-size:12px;color:var(--p);font-weight:bold}
+h3{margin:7px 0;font-size:18px}
+.course-body p{font-size:14px;min-height:50px}
+.meta{font-size:12px;color:var(--muted);margin:12px 0}
+.course-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.course-foot strong{font-size:13px}
+.course:hover{box-shadow:0 10px 28px #20254a12;transform:translateY(-3px)}
+.course{transition:.2s}
+.dashboard{padding:25px}
+.progress{margin-top:20px}
+.progress-label{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.track{height:9px;background:#eceef6;border-radius:10px;margin-top:8px;overflow:hidden}
+.bar{height:100%;background:var(--p);width:0;transition:width .3s}
+.callout{padding:30px;background:#201c50;color:white;border-radius:20px;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.callout p{color:#d8d5ff}
+footer{background:white;border-top:1px solid var(--border);padding:22px 0;color:var(--muted);font-size:13px}
+.modal{position:fixed;inset:0;background:#101629aa;display:none;align-items:center;justify-content:center;padding:18px;z-index:10}
+.modal.open{display:flex}
+.modal-box{background:white;padding:24px;border-radius:18px;width:min(500px,100%);max-height:85vh;overflow:auto}
+.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.lesson{background:#f5f6fb;padding:11px;border-radius:9px;margin-top:9px}
+.empty{display:none;text-align:center;padding:20px}
+@media(max-width:760px){.hero-grid{grid-template-columns:1fr}.courses{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:40px 0}.links{gap:10px}.nav{justify-content:center}}
+@media(max-width:470px){.courses{grid-template-columns:1fr}.course-body{padding:15px}.callout{padding:22px}.heading{align-items:stretch}}
+</style>
+</head>
+<body>
+<header>
+<div class="container">
+<nav>
+<a class="logo" href="#home">Edu<span>nova</span></a>
+<div class="links">
+<a href="#home">الرئيسية</a>
+<a href="#courses">الكورسات</a>
+<a href="#dashboard">لوحة الطالب</a>
+<a href="#about">عن المنصة</a>
 </div>
-<button id="mute">Sound: On</button>
-<div id="menu" class="screen">
-  <h1>DARK ESCAPE</h1>
-  <p>The house is not empty. Find the 3 relics, collect keys to open locked doors, then escape through the exit door at the east end of the long corridor.</p>
-  <ul><li>W A S D &ndash; move &nbsp; Shift &ndash; run</li><li>Mouse &ndash; look &nbsp; E &ndash; interact &nbsp; F &ndash; flashlight &nbsp; M &ndash; mute</li><li>Esc &ndash; pause. Running makes noise. The monster hears you.</li></ul>
-  <button id="play">Play</button>
+<a class="btn primary" href="#courses">ابدأ التعلم</a>
+</nav>
 </div>
-<div id="pause" class="screen hidden"><h2>Paused</h2><button id="resume">Resume</button><button class="re">Restart</button></div>
-<div id="over" class="screen hidden"><h2 class="bad">You died</h2><p>It found you in the dark.</p><button class="re">Try again</button></div>
-<div id="win" class="screen hidden"><h2 class="good">You escaped</h2><p>The door slams shut behind you. You are alive.</p><button class="re">Play again</button></div>
-<!-- Three.js r128 (classic build) from cdnjs: works by double-clicking index.html, no server needed -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="game.js"></script>
-</body></html>
+</header>
+
+<main>
+<section class="hero" id="home">
+<div class="container hero-grid">
+<div>
+<span class="eyebrow">✨ منصتك نحو مستقبل أفضل</span>
+<h1>تعلّم اليوم،<br>وابنِ مستقبلك غداً.</h1>
+<p>اكتشف عالم البرمجة والتقنية مع Edunova. تعلّم مهارات جديدة، وطوّر قدراتك، وتابع رحلتك التعليمية خطوة بخطوة.</p>
+<a class="btn primary" href="#courses">استكشف الكورسات ←</a>
+<a class="btn secondary" href="#dashboard">لوحة الطالب</a>
+</div>
+<div class="hero-card">
+<div class="hero-icon">🎓 💻</div>
+<h3>رحلتك التعليمية تبدأ هنا</h3>
+<p>معرفة جديدة كل يوم، وخطوة أقرب إلى أهدافك.</p>
+<div class="stats">
+<div class="stat"><strong>6</strong><small>كورسات تجريبية</small></div>
+<div class="stat"><strong>24/7</strong><small>تعلّم بوقتك</small></div>
+<div class="stat"><strong>مجاني</strong><small>للبداية</small></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="courses">
+<div class="container">
+<div class="heading">
+<div><h2>الكورسات التعليمية</h2><p>اختر المجال الذي يناسب أهدافك.</p></div>
+<input class="search" id="search" type="search" placeholder="ابحث عن كورس..." aria-label="ابحث عن كورس">
+</div>
+<div class="filters">
+<button class="filter active" data-category="الكل">الكل</button>
+<button class="filter" data-category="برمجة">البرمجة</button>
+<button class="filter" data-category="شبكات">الشبكات</button>
+<button class="filter" data-category="تصميم">التصميم</button>
+</div>
+<div class="courses" id="courseList">
+
+<article class="course" data-category="برمجة" data-title="HTML CSS تطوير الويب">
+<div class="cover purple">🌐</div><div class="course-body">
+<span class="tag">البرمجة وتطوير الويب</span>
+<h3>أساسيات HTML و CSS</h3>
+<p>تعلّم بناء صفحات الويب وتنسيقها من الصفر.</p>
+<div class="meta">📚 8 دروس · للمبتدئين</div>
+<div class="course-foot"><strong>مجاني</strong><button class="btn secondary" onclick="openCourse(0)">عرض الكورس</button></div>
+</div></article>
+
+<article class="course" data-category="برمجة" data-title="JavaScript جافاسكربت">
+<div class="cover orange">⚡️</div><div class="course-body">
+<span class="tag">البرمجة</span>
+<h3>مقدمة في JavaScript</h3>
+<p>تعرّف على المتغيرات والشروط والدوال وتفاعل المواقع.</p>
+<div class="meta">📚 8 دروس · مبتدئ</div>
+<div class="course-foot"><strong>مجاني</strong><button class="btn secondary" onclick="openCourse(1)">عرض الكورس</button></div>
+</div></article>
+
+<article class="course" data-category="شبكات" data-title="شبكات الحاسوب IP">
+<div class="cover blue">🖧</div><div class="course-body">
+<span class="tag">الشبكات</span>
+<h3>أساسيات شبكات الحاسوب</h3>
+<p>تعلّم مفاهيم الشبكات وعناوين IP وأجهزة الاتصال.</p>
+<div class="meta">📚 9 دروس · مبتدئ</div>
+<div class="course-foot"><strong>مجاني</strong><button class="btn secondary" onclick="openCourse(2)">عرض الكورس</button></div>
+</div></article>
+
+<article class="course" data-category="شبكات" data-title="الأمن السيبراني حماية">
+<div class="cover gray">🔐</div><div class="course-body">
+<span class="tag">الشبكات والأمان</span>
+<h3>مقدمة في الأمن السيبراني</h3>
+<p>تعرّف على حماية الأجهزة والحسابات والمعلومات.</p>
+<div class="meta">📚 7 دروس · مبتدئ</div>
+<div class="course-foot"><strong>مجاني</strong><button class="btn secondary" onclick="openCourse(3)">عرض الكورس</button></div>
+</div></article>
+
+<article class="course" data-category="تصميم" data-title="التصميم الرقمي ألوان">
+<div class="cover pink">🎨</div><div class="course-body">
+<span class="tag">التصميم</span>
+<h3>أساسيات التصميم الرقمي</h3>
+<p>تعلّم الألوان والخطوط والتنسيق وإنشاء تصاميم مرتبة.</p>
+<div class="meta">📚 6 دروس · مبتدئ</div>
+<div class="course-foot"><strong>مجاني</strong><button class="btn secondary" onclick="openCourse(4)">عرض الكورس</button></div>
+</div></article>
+
+<article class="course" data-category="برمجة" data-title="Python بايثون">
+<div class="cover green">🐍</div><div class="course-body">
+<span class="tag">البرمجة</span>
+<h3>مقدمة في Python</h3>
+<p>ابدأ تعلم إحدى لغات البرمجة المناسبة للمبتدئين.</p>
+<div class="meta">📚 8 دروس · مبتدئ</div>
+<div class="course-foot"><strong>مجاني</strong><button class="btn secondary" onclick="openCourse(5)">عرض الكورس</button></div>
+</div></article>
+
+</div>
+<p id="empty" class="empty">ما لقينا كورسات مطابقة لبحثك.</p>
+</div>
+</section>
+
+<section id="dashboard">
+<div class="container">
+<div class="heading"><div><h2>لوحة الطالب</h2><p>تابع الكورسات التي بدأت بها على هذا الجهاز.</p></div></div>
+<div class="dashboard">
+<h3>مرحباً بك في Edunova 👋</h3>
+<p>افتح أحد الكورسات واضغط «ابدأ هذا الكورس» لتسجيله في لوحة الطالب.</p>
+<div class="progress">
+<div class="progress-label"><span>الكورسات التي بدأتها</span><strong id="started">0 من 6</strong></div>
+<div class="track"><div class="bar" id="progressBar"></div></div>
+</div>
+<p id="progressText">لم تبدأ أي كورس بعد.</p>
+</div>
+</div>
+</section>
+
+<section id="about">
+<div class="container">
+<div class="callout">
+<div><h2>ابدأ رحلتك مع Edunova</h2><p>تعلّم مهارات جديدة ووسّع آفاقك التقنية.</p></div>
+<a class="btn" style="background:white;color:#302878" href="#courses">تصفح الكورسات</a>
+</div>
+</div>
+</section>
+</main>
+
+<footer><div class="container">© 2026 Edunova — منصتك التعليمية العربية.</div></footer>
+
+<div class="modal" id="courseModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+<div class="modal-box">
+<div class="modal-head"><h2 id="modalTitle">تفاصيل الكورس</h2><button class="btn secondary" onclick="closeCourse()">إغلاق ✕</button></div>
+<p id="modalDescription"></p>
+<h3>محتويات الكورس</h3>
+<div id="lessons"></div>
+<p style="font-size:12px">ملاحظة: هذه عناوين دروس تجريبية؛ محتوى الدروس الفعلي سيُضاف لاحقاً.</p>
+<button class="btn primary" onclick="startCourse()">ابدأ هذا الكورس</button>
+</div>
+</div>
+
+<script>
+const data=[
+{title:"أساسيات HTML و CSS",description:"تعلّم كيفية بناء صفحة ويب وتنسيقها.",lessons:["ما هي HTML؟","العناوين والفقرات","الروابط والصور","القوائم","مقدمة في CSS","الألوان والخطوط","تخطيط الصفحة","مشروع تطبيقي"]},
+{title:"مقدمة في JavaScript",description:"تعرّف على أساسيات البرمجة التفاعلية.",lessons:["مقدمة في JavaScript","المتغيرات","أنواع البيانات","العمليات الحسابية","الشروط","الحلقات","الدوال","مشروع تطبيقي"]},
+{title:"أساسيات شبكات الحاسوب",description:"تعرّف على مكونات الشبكات ومفاهيمها.",lessons:["مفهوم الشبكة","أنواع الشبكات LAN و WAN","أجهزة الشبكات","عنوان IP","قناع الشبكة Subnet Mask","نموذج OSI","بروتوكول TCP/IP","DNS و DHCP","تطبيق عملي"]},
+{title:"مقدمة في الأمن السيبراني",description:"مبادئ أساسية لحماية الأنظمة والمعلومات.",lessons:["مفهوم الأمن السيبراني","كلمات المرور","المصادقة الثنائية","التصيد الإلكتروني","البرمجيات الخبيثة","تحديث الأنظمة","النسخ الاحتياطي"]},
+{title:"أساسيات التصميم الرقمي",description:"تعرّف على قواعد التصميم المرئي.",lessons:["مبادئ التصميم","نظرية الألوان","اختيار الخطوط","التوازن والمحاذاة","التصميم للويب","مشروع تطبيقي"]},
+{title:"مقدمة في Python",description:"خطواتك الأولى في البرمجة باستخدام Python.",lessons:["التعرف على Python","المتغيرات","أنواع البيانات","الطباعة والإدخال","الشروط","الحلقات","الدوال","مشروع تطبيقي"]}
+];
+let current=0;
+let started=[];
+try{started=JSON.parse(localStorage.getItem("edunovaStarted")||"[]");if(!Array.isArray(started))started=[]}catch(e){started=[]}
+function updateDashboard(){
+document.getElementById("started").textContent=started.length+" من "+data.length;
+document.getElementById("progressBar").style.width=(started.length/data.length*100)+"%";
+document.getElementById("progressText").textContent=started.length?"بدأت "+started.length+" كورسات من أصل "+data.length+".":"لم تبدأ أي كورس بعد.";
+}
+function openCourse(i){
+current=i;const c=data[i];
+document.getElementById("modalTitle").textContent=c.title;
+document.getElementById("modalDescription").textContent=c.description;
+const list=document.getElementById("lessons");list.replaceChildren();
+c.lessons.forEach((lesson,index)=>{const item=document.createElement("div");item.className="lesson";item.textContent=(index+1)+". "+lesson;list.appendChild(item)});
+document.getElementById("courseModal").classList.add("open");
+}
+function closeCourse(){document.getElementById("courseModal").classList.remove("open")}
+function startCourse(){
+if(!started.includes(current)){started.push(current);try{localStorage.setItem("edunovaStarted",JSON.stringify(started))}catch(e){}}
+updateDashboard();closeCourse();document.getElementById("dashboard").scrollIntoView();
+}
+let category="الكل";
+function filterCourses(){
+const q=document.getElementById("search").value.trim().toLowerCase();let count=0;
+document.querySelectorAll(".course").forEach(card=>{
+const matches=(card.dataset.title+" "+card.textContent).toLowerCase().includes(q);
+const categoryMatches=category==="الكل"||card.dataset.category===category;
+const show=matches&&categoryMatches;card.style.display=show?"":"none";if(show)count++;
+});
+document.getElementById("empty").style.display=count?"none":"block";
+}
+document.getElementById("search").addEventListener("input",filterCourses);
+document.querySelectorAll(".filter").forEach(btn=>btn.addEventListener("click",()=>{
+document.querySelectorAll(".filter").forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");category=btn.dataset.category;filterCourses();
+}));
+document.getElementById("courseModal").addEventListener("click",e=>{if(e.target.id==="courseModal")closeCourse()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCourse()});
+updateDashboard();
+</script>
+</body>
+</html>
