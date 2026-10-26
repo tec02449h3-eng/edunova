@@ -1,0 +1,24 @@
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;color:#d8d2c4;font-family:"Palatino Linotype",Georgia,serif;overflow:hidden}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block}
+.hidden{display:none!important}
+.screen{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center;background:rgba(0,0,0,.84)}
+.screen p,.screen ul{max-width:560px;line-height:1.6;margin:0}
+.screen ul{list-style:none;padding:0;color:#9d978a;font-size:.95rem}
+h1{margin:0;font-size:clamp(2.4rem,9vw,5.5rem);letter-spacing:.14em;color:#a31515;text-shadow:0 0 30px #5a0000}
+h2{margin:0;font-size:clamp(2rem,6vw,3.5rem);letter-spacing:.1em}
+.bad{color:#b01818}.good{color:#7fae7a}
+button{font:inherit;font-size:1.05rem;color:#d8d2c4;background:#1a0b0b;border:1px solid #6b1a1a;padding:10px 34px;cursor:pointer}
+button:hover,button:focus-visible{background:#4a1010;outline:2px solid #d8d2c4;outline-offset:2px}
+#mute{position:fixed;top:10px;right:10px;z-index:9;font-size:.8rem;padding:5px 12px}
+#hud{position:fixed;inset:0;z-index:2;pointer-events:none}
+#hud::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.75))}
+#hud::before{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;border-radius:50%;background:#d8d2c4a0;z-index:3}
+.bars{position:absolute;left:16px;bottom:16px;z-index:3;display:grid;gap:8px;font-size:.8rem}
+.bars i{display:block;width:200px;height:10px;border:1px solid #6b6258;margin-top:3px}
+.bars b{display:block;height:100%}
+#hp{background:#a31515}#bat{background:#c9a93a}
+#stats{position:absolute;right:16px;bottom:16px;z-index:3}
+#obj{position:absolute;left:16px;top:14px;z-index:3;max-width:60vw;font-size:.9rem;color:#b9b2a2}
+#prompt{position:absolute;left:0;right:0;bottom:22%;z-index:3;text-align:center;font-size:1.1rem;text-shadow:0 0 6px #000}
+#flash{position:absolute;inset:0;background:#a00;opacity:0;z-index:2}

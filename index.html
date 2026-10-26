@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DARK ESCAPE</title>
+<link rel="stylesheet" href="style.css">
+</head><body>
+<canvas id="c"></canvas>
+<div id="hud" class="hidden">
+  <div class="bars"><div>Health<i><b id="hp"></b></i></div><div>Battery<i><b id="bat"></b></i></div></div>
+  <div id="stats">Keys: <span id="keys">0</span> &nbsp; Relics: <span id="rel">0</span>/3</div>
+  <div id="obj"></div><div id="prompt"></div><div id="flash"></div>
+</div>
+<button id="mute">Sound: On</button>
+<div id="menu" class="screen">
+  <h1>DARK ESCAPE</h1>
+  <p>The house is not empty. Find the 3 relics, collect keys to open locked doors, then escape through the exit door at the east end of the long corridor.</p>
+  <ul><li>W A S D &ndash; move &nbsp; Shift &ndash; run</li><li>Mouse &ndash; look &nbsp; E &ndash; interact &nbsp; F &ndash; flashlight &nbsp; M &ndash; mute</li><li>Esc &ndash; pause. Running makes noise. The monster hears you.</li></ul>
+  <button id="play">Play</button>
+</div>
+<div id="pause" class="screen hidden"><h2>Paused</h2><button id="resume">Resume</button><button class="re">Restart</button></div>
+<div id="over" class="screen hidden"><h2 class="bad">You died</h2><p>It found you in the dark.</p><button class="re">Try again</button></div>
+<div id="win" class="screen hidden"><h2 class="good">You escaped</h2><p>The door slams shut behind you. You are alive.</p><button class="re">Play again</button></div>
+<!-- Three.js r128 (classic build) from cdnjs: works by double-clicking index.html, no server needed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="game.js"></script>
+</body></html>
